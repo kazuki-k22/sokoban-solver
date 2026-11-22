@@ -29,21 +29,9 @@ function solveLevel(text: string): string {
   });
   const D = [-w, w, -1, 1]; // u d l r
 
-  // The hallway: a row whose every inner square is floor, walled above and below but for the doors (a room's row
-  // can be all floor too, so take the candidate with the least floor beside it).
-  let hall = -1;
-  let bestSide = Infinity;
-  const floorIn = (y: number) => {
-    let c = 0;
-    if (y >= 0 && y < h) for (let x = 0; x < w; x++) c += wall[y * w + x] ? 0 : 1;
-    return c;
-  };
-  for (let y = 0; y < h; y++) {
-    let all = true;
-    for (let x = 1; x < w - 1; x++) if (wall[y * w + x]) all = false;
-    const side = floorIn(y - 1) + floorIn(y + 1);
-    if (all && side < bestSide) { hall = y; bestSide = side; }
-  }
+  // The hallway: the row the player starts on (the generator always starts the player in the hallway; a room's row can
+  // be all floor too, so the row's shape alone cannot tell it apart).
+  const hall = Math.floor(player / w);
   const inHall = (i: number) => Math.floor(i / w) === hall;
 
   // Walk from `from` to `to` over floor, around boxes: the letters, or null.
